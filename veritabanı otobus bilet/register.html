@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Üye Ol | BiletBul</title>
+    <style>
+        :root {
+            /* Soft Pastel Pembe Vurgu Renkleri */
+            --primary-accent: #FFB6C1; 
+            --accent-glow: rgba(255, 182, 193, 0.4);
+             color-scheme: dark;
+            
+            /* Başarı/Onay Renkleri */
+            --success-color: #2ecc71;
+            --success-glow: rgba(46, 204, 113, 0.4);
+
+            --pure-black: #000000;
+            --card-bg: rgba(20, 20, 20, 0.85);
+            --border-color: #333333;
+            --text-main: #FFFFFF;
+            --text-muted: #888888;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--pure-black);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+
+            /* ARKA PLAN GÖRSELİ */
+            background-image: url('registergorsel.png'); 
+            background-size: cover; 
+            background-position: center; 
+            background-attachment: fixed; 
+        }
+
+        /* HEADER TASARIMI */
+        header {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: 900;
+            color: var(--pure-black);
+            text-decoration: none;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            -webkit-text-stroke: 1.5px var(--primary-accent);
+            text-shadow: 0 0 15px var(--accent-glow);
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover { color: var(--primary-accent); }
+
+        .header-links {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .header-links a {
+            color: #f8deec;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .header-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--primary-accent);
+            transition: width 0.3s ease;
+        }
+
+        .header-links a:hover { color: var(--text-main); }
+        .header-links a:hover::after { width: 100%; }
+
+        /* KAYIT SAYFASI ÖZEL YERLEŞİMİ (Ortalanmış) */
+        .register-wrapper {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        /* CAM EFEKTLİ KART */
+        .glass-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 50px 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+            backdrop-filter: blur(10px);
+            width: 100%;
+            max-width: 500px;
+            position: relative;
+            overflow: hidden;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--primary-accent);
+            box-shadow: 0 0 15px var(--primary-accent);
+        }
+
+        .glass-card h2 {
+            font-size: 26px;
+            margin-bottom: 10px;
+            color: var(--text-main);
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .glass-card p.subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            margin-bottom: 35px;
+            font-size: 15px;
+        }
+
+        /* INPUT GRUPLARI */
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .input-group input, .input-group select {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+            padding: 16px 20px;
+            border-radius: 10px;
+            font-size: 15px;
+            color: var(--text-main);
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus, .input-group select:focus {
+            border-color: var(--primary-accent);
+            box-shadow: 0 0 15px rgba(255, 182, 193, 0.2);
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+        .form-row .input-group {
+            flex: 1;
+        }
+
+        /* SÖZLEŞME ONAYI */
+        .agreement-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 30px;
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .agreement-group a {
+            color: var(--primary-accent);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .agreement-group a:hover {
+            color: #FFC0CB;
+            text-decoration: underline;
+        }
+
+        /* BUTONLAR */
+        .btn {
+            width: 100%;
+            padding: 18px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--primary-accent);
+            color: var(--pure-black);
+        }
+
+        .btn-primary:hover {
+            background: #FFC0CB;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px var(--accent-glow);
+        }
+
+        /* AYIRICI METİN VE GİRİŞE DÖN LİNKİ */
+        .login-link {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .login-link a {
+            color: var(--primary-accent);
+            text-decoration: none;
+            font-weight: bold;
+            margin-left: 5px;
+            transition: color 0.3s;
+        }
+
+        .login-link a:hover {
+            color: #FFC0CB;
+            text-decoration: underline;
+        }
+
+        /* --- BAŞARI EKRANI (Üyelik Sonrası) --- */
+        .success-section {
+            background: var(--card-bg);
+            border: 1px solid var(--success-color);
+            padding: 60px 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px var(--success-glow);
+            backdrop-filter: blur(12px);
+            width: 100%;
+            max-width: 650px;
+            text-align: center;
+            display: none; /* Başlangıçta gizli */
+            flex-direction: column;
+            align-items: center;
+            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .success-icon {
+            width: 90px;
+            height: 90px;
+            background: rgba(46, 204, 113, 0.15);
+            border: 3px solid var(--success-color);
+            color: var(--success-color);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 45px;
+            margin-bottom: 25px;
+            box-shadow: 0 0 25px var(--success-glow);
+        }
+
+        .success-section h2 {
+            font-size: 28px;
+            color: var(--text-main);
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .success-section p {
+            font-size: 18px;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+
+        /* METİN İÇİ LOGO (INLINE LOGO) EFEKTİ */
+        .inline-logo {
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--pure-black);
+            text-decoration: none;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            -webkit-text-stroke: 1px var(--primary-accent);
+            text-shadow: 0 0 10px var(--accent-glow);
+            transition: all 0.3s ease;
+            display: inline-block;
+            margin-left: 5px;
+            vertical-align: baseline;
+            position: relative;
+            top: 3px;
+        }
+
+        .inline-logo:hover {
+            color: var(--primary-accent);
+            transform: scale(1.05) translateY(-2px);
+            text-shadow: 0 0 20px var(--accent-glow);
+        }
+
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="logo">BiletBul</a>
+        <div class="header-links">
+            <a href="sorgula.html">Seyahat Sorgula</a>
+            <div id="authArea">
+            <a href="login.html" id="loginBtn">Üye Girişi</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="register-wrapper">
+        
+        <div class="glass-card" id="registerCard">
+            <h2>Aramıza Katılın</h2>
+            <p class="subtitle">Saniyeler içinde üye ol, avantajları yakala</p>
+            
+            <form id="registerForm">
+                
+                <div class="input-group">
+                    <label for="tc_no">TC Kimlik No</label>
+                    <input type="text" id="tc_no" name="tc_no" maxlength="11" placeholder="11 Haneli TC No" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="ad">Ad</label>
+                        <input type="text" id="ad" name="ad" placeholder="Örn: Ayşe" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="soy_ad">Soyad</label>
+                        <input type="text" id="soy_ad" name="soy_ad" placeholder="Örn: Yılmaz" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="email">E-Posta Adresi</label>
+                        <input type="email" id="email" name="e_mail" placeholder="ornek@mail.com" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="phone">Cep Telefonu</label>
+                        <input type="tel" id="phone" name="telefon" placeholder="05XX XXX XX XX" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="cinsiyet">Cinsiyet</label>
+                        <select id="cinsiyet" name="cinsiyet" required>
+                            <option value="" disabled selected>Seçiniz</option>
+                            <option value="E">Erkek</option>
+                            <option value="K">Kadın</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="sifre">Şifre</label>
+                        <input type="password" id="sifre" name="sifre" placeholder="••••••••" required>
+                    </div>
+                </div>
+
+                <div class="agreement-group">
+                    <input type="checkbox" id="agreement" name="agreement" style="width:16px; height:16px; margin-top: 3px; accent-color: var(--primary-accent);" required>
+                    <label for="agreement">
+                        <a href="#">Kullanım Koşulları</a>'nı ve <a href="#">Gizlilik Politikası</a>'nı okudum, kabul ediyorum.
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Üyeliğimi Oluştur</button>
+                
+                <div class="login-link">
+                    Zaten üye misiniz? <a href="login.html">Giriş Yap</a>
+                </div>
+            </form>
+        </div>
+
+        <div class="success-section" id="successSection">
+            <div class="success-icon">✔</div>
+            <h2>Üyeliğiniz başarılı şekilde oluşturulmuştur!</h2>
+            <p>Gezi rotan hazırsa hadi <a href="index.html" class="inline-logo">BiletBul</a>!</p>
+        </div>
+
+    </div>
+
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+            e.preventDefault(); 
+            
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData);
+
+            try {
+                 // register.html içindeki fetch kısmını şu şekilde değiştir:
+                   const response = await fetch('http://localhost:3000/api/register', {
+                     method: 'POST',
+                     headers: { 'Content-Type': 'application/json' },
+                     body: JSON.stringify(data)
+                    });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    // Üyelik formunu gizle
+                    document.getElementById('registerCard').style.display = 'none';
+                    // Başarı ekranını animasyonla göster
+                    document.getElementById('successSection').style.display = 'flex';
+                } else {
+                    alert("Hata: " + result.message);
+                }
+            } catch (error) {
+                console.error("Kayıt hatası:", error);
+                alert("Sunucuya bağlanılamadı.");
+            }
+        });
+
+
+
+
+
+
+
+
+        function updateNavbar() {
+        const authArea = document.getElementById('authArea');
+        const user = JSON.parse(localStorage.getItem('user'));
+
+        if (user) {
+            // Eğer giriş yapılmışsa: Mevcut butonu silip yerine isim ve çıkış butonu koyar
+            authArea.innerHTML = `
+                <span style="color: var(--text-main); margin-right: 10px; font-weight: 500;">Merhaba, ${user.ad}</span>
+                <div class="header-links">
+                    <a href="#" onclick="logout()" style="text-transform: none;">Çıkış Yap</a>
+                </div>
+            `;
+        }
+        }
+
+        function logout() {
+        if(confirm("Çıkış yapmak istediğinize emin misiniz?")) {
+            localStorage.removeItem('user');
+            // Seçilen koltuklar gibi geçici verileri de temizleyelim
+            localStorage.removeItem('secilenKoltuklar');
+            window.location.href = "index.html";
+        }
+        }
+
+        // Sayfa açıldığında kontrolü çalıştır
+        document.addEventListener('DOMContentLoaded', updateNavbar);
+
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Güvenli Ödeme | BiletBul</title>
+    <style>
+        :root {
+            --primary-accent: #FFB6C1; 
+            --accent-glow: rgba(255, 182, 193, 0.4);
+            color-scheme: dark;
+            --success-color: #2ecc71;
+            --success-glow: rgba(46, 204, 113, 0.4);
+            --pure-black: #000000;
+            --card-bg: rgba(20, 20, 20, 0.85); 
+            --border-color: #333333;
+            --text-main: #FFFFFF;
+            --text-muted: #888888;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+
+        body {
+            background-color: var(--pure-black);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-image: url('odemegorsel.png'); 
+            background-size: cover; 
+            background-position: center; 
+            background-attachment: fixed; 
+        }
+
+        header {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(15px);
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: 900;
+            color: var(--pure-black);
+            text-decoration: none;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            -webkit-text-stroke: 1.5px var(--primary-accent);
+            text-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        .container {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 50px 20px;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .payment-section {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+            backdrop-filter: blur(12px);
+            width: 100%;
+            max-width: 600px;
+            position: relative;
+            animation: fadeIn 0.5s ease-out;
+            margin-bottom: 20px;
+        }
+
+        .payment-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--primary-accent);
+            box-shadow: 0 0 15px var(--primary-accent);
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+        }
+
+        .payment-section h2, .payment-section h3 {
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: var(--text-main);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .input-group { display: flex; flex-direction: column; }
+        .input-group.full-width { grid-column: span 2; }
+
+        .input-group label {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .input-group input {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 15px;
+            color: var(--text-main);
+            outline: none;
+        }
+
+        .input-group input:focus { border-color: var(--primary-accent); background: rgba(0, 0, 0, 0.8); }
+        .input-group input:disabled { opacity: 0.6; cursor: not-allowed; }
+
+        .summary-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 40px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 380px;
+            position: sticky;
+            top: 100px;
+        }
+
+        .summary-detail { display: flex; justify-content: space-between; margin-bottom: 15px; color: var(--text-muted); font-size: 14px; }
+        .summary-detail span { color: var(--text-main); font-weight: bold; }
+        .total-price { font-size: 32px; color: var(--text-main); font-weight: 900; text-align: right; margin: 30px 0; }
+
+        .pay-btn {
+            background: var(--primary-accent);
+            color: var(--pure-black);
+            border: none;
+            padding: 18px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+            text-transform: uppercase;
+        }
+
+        .pay-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 25px var(--accent-glow); }
+
+        .success-section {
+            background: var(--card-bg);
+            border: 1px solid var(--success-color);
+            padding: 60px 40px;
+            border-radius: 20px;
+            text-align: center;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="logo">BiletBul</a>
+    </header>
+
+    <div class="container" id="mainContainer">
+        
+        <div id="leftContent" style="width: 100%; max-width: 600px;">
+            <div class="payment-section">
+                <h3>Yolcu Bilgileri</h3>
+                <div id="passengerFormsContainer">
+                    </div>
+            </div>
+
+            <div class="payment-section" id="paymentCard">
+                <h3>Ödeme Bilgileri</h3>
+                <form id="paymentForm">
+                    <div class="form-grid">
+                        <div class="input-group full-width">
+                            <label>Kart Üzerindeki İsim</label>
+                            <input type="text" id="cardName" placeholder="Merve Yılmaz" required>
+                        </div>
+                        <div class="input-group full-width">
+                            <label>Kart Numarası</label>
+                            <input type="text" id="cardNumber" placeholder="0000 0000 0000 0000" maxlength="19" required>
+                        </div>
+                        <div class="input-group">
+                            <label>Son Kullanma (AA/YY)</label>
+                            <input type="text" id="cardExpiry" placeholder="04/28" maxlength="5" required>
+                        </div>
+                        <div class="input-group">
+                            <label>CVC / CVV</label>
+                            <input type="password" id="cardCVC" placeholder="•••" maxlength="3" required>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="summary-card" id="summaryCard">
+            <h3>Sipariş Özeti</h3>
+            <div id="summaryDetails">
+                </div>
+            <div style="border-top: 1px solid var(--border-color); margin: 20px 0;"></div>
+            <div class="summary-detail">Bilet Toplam: <span id="displayTotal">0,00 ₺</span></div>
+            <div class="total-price" id="finalPrice">0,00 ₺</div>
+
+            <button type="submit" form="paymentForm" class="pay-btn">🔒 Ödemeyi Tamamla</button>
+        </div>
+
+        <div class="success-section" id="successSection">
+            <div style="font-size: 50px; color: var(--success-color);">✔</div>
+            <h2>Ödemeniz başarıyla alındı!</h2>
+            <p>Bilet bilgileriniz sisteme kaydedilmiştir.</p>
+            <br>
+            <a href="index.html" style="color: var(--primary-accent); text-decoration: none; font-weight: bold;">Ana Sayfaya Dön</a>
+        </div>
+    </div>
+
+  <script>
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (!user) {
+        alert("Ödeme yapabilmek için lütfen giriş yapın!");
+        window.location.href = "login.html";
+    }
+
+    const secilenKoltuklar = JSON.parse(localStorage.getItem('secilenKoltuklar')) || [];
+    const seferBilgisi = JSON.parse(localStorage.getItem('secilenSefer')) || {};
+
+    const passengerContainer = document.getElementById('passengerFormsContainer');
+    const summaryDetails = document.getElementById('summaryDetails');
+    let toplamTutar = 0;
+
+    summaryDetails.innerHTML = `
+        <div class="summary-detail">Güzergah: <span>${seferBilgisi.kalkis} ➔ ${seferBilgisi.varis}</span></div>
+        <div class="summary-detail">Tarih: <span>${seferBilgisi.tarih}</span></div>
+        <div class="summary-detail">Koltuklar: <span>${secilenKoltuklar.map(k => k.koltuk_no).join(', ')}</span></div>
+    `;
+
+    // Her koltuk için form oluştur
+    secilenKoltuklar.forEach((koltuk, index) => {
+        toplamTutar += koltuk.fiyat || 0; 
+        
+        passengerContainer.innerHTML += `
+            <div class="passenger-box" style="margin-bottom: 25px; padding: 20px; border: 1px solid var(--border-color); border-radius: 12px; background: rgba(255,255,255,0.02);">
+                <p style="color: var(--primary-accent); font-weight: bold; margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 5px;">
+                    ${koltuk.koltuk_no} Numaralı Koltuk Yolcusu (${koltuk.cinsiyet === 'E' ? 'Erkek' : 'Kadın'})
+                </p>
+                <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="input-group">
+                        <label>TC Kimlik No</label>
+                        <input type="text" class="p-tc" maxlength="11" placeholder="TC No giriniz" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Ad Soyad</label>
+                        <input type="text" class="p-name" placeholder="Ad Soyad giriniz" required>
+                    </div>
+                </div>
+                <input type="hidden" class="p-gender" value="${koltuk.cinsiyet}">
+                <input type="hidden" class="p-bilet-id" value="${koltuk.bilet_id}">
+                <input type="hidden" class="p-koltuk-no" value="${koltuk.koltuk_no}">
+            </div>
+        `;
+    });
+
+    document.getElementById('displayTotal').innerText = toplamTutar.toFixed(2) + ' ₺';
+    document.getElementById('finalPrice').innerText = toplamTutar.toFixed(2) + ' ₺';
+
+    document.getElementById('paymentForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const yolcular = [];
+        const tcInputs = document.querySelectorAll('.p-tc');
+        const nameInputs = document.querySelectorAll('.p-name');
+        const genderInputs = document.querySelectorAll('.p-gender');
+        const biletIdInputs = document.querySelectorAll('.p-bilet-id');
+        const koltukNoInputs = document.querySelectorAll('.p-koltuk-no'); // Yeni eklediğimiz selector
+
+        tcInputs.forEach((input, i) => {
+            const names = nameInputs[i].value.trim().split(' ');
+            yolcular.push({
+                tc_no: input.value,
+                ad: names[0],
+                soy_ad: names.slice(1).join(' '),
+                cinsiyet: genderInputs[i].value,
+                bilet_id: biletIdInputs[i].value,
+                koltuk_no: koltukNoInputs[i].value // BURASI KRİTİK: Backend'in beklediği isim!
+            });
+        });
+
+        const payload = {
+            kart: {
+                kart_no: document.getElementById('cardNumber').value.replace(/\s/g, ''),
+                son_kullanim: document.getElementById('cardExpiry').value,
+                cvc: document.getElementById('cardCVC').value
+            },
+            yolcular: yolcular,
+            odemeDetay: { tutar: toplamTutar, birimFiyat: (toplamTutar / yolcular.length) },
+            satinAlanTc: user.tc_no, seferId: seferBilgisi.sefer_id // KRİTİK: Backend'e sefer ID'sini gönderiyoruz // Ödemeyi yapan Sinan Kaya
+        };
+
+        try {
+            const response = await fetch('http://localhost:3000/api/odeme-yap', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                document.getElementById('leftContent').style.display = 'none';
+                document.getElementById('summaryCard').style.display = 'none';
+                document.getElementById('successSection').style.display = 'flex';
+                localStorage.removeItem('secilenKoltuklar');
+            } else {
+                alert("İşlem Başarısız: " + result.message);
+            }
+        } catch (err) {
+            alert("Sunucuya erişilemiyor!");
+        }
+    });
+</script>
+</body>
+</html>

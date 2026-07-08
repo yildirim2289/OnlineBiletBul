@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bilet İptal / İade | BiletBul</title>
+    <style>
+        :root {
+            --primary-accent: #FFB6C1; 
+            --accent-glow: rgba(255, 182, 193, 0.4);
+            color-scheme: dark;
+            --danger-color: #FF6B6B;
+            --danger-glow: rgba(255, 107, 107, 0.4);
+            --success-color: #2ecc71;
+            --success-glow: rgba(46, 204, 113, 0.4);
+            --pure-black: #000000;
+            --card-bg: rgba(20, 20, 20, 0.85);
+            --border-color: #333333;
+            --text-main: #FFFFFF;
+            --text-muted: #888888;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+
+        body {
+            background-color: var(--pure-black);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-image: url('iadegorsel.png'); 
+            background-size: cover; 
+            background-position: center; 
+            background-attachment: fixed; 
+        }
+
+        header {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(15px);
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: 900;
+            color: var(--pure-black);
+            text-decoration: none;
+            -webkit-text-stroke: 1.5px var(--primary-accent);
+            text-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        .container { flex-grow: 1; display: flex; justify-content: center; align-items: center; padding: 40px 20px; }
+
+        .refund-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 40px 50px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 550px;
+            position: relative;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .refund-card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px;
+            background: var(--danger-color); box-shadow: 0 0 15px var(--danger-color);
+        }
+
+        .ticket-summary {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px dashed var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .ticket-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 14px; }
+        .ticket-row span { color: var(--text-muted); }
+
+        .refund-amount-box {
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(0,0,0,0.6); padding: 15px 20px; border-radius: 10px;
+            margin-bottom: 25px; border-left: 4px solid var(--success-color);
+        }
+
+        .btn { flex: 1; padding: 16px; font-weight: bold; border-radius: 10px; cursor: pointer; text-transform: uppercase; border: none; text-decoration: none; text-align: center; }
+        .btn-cancel { background: transparent; color: var(--text-main); border: 2px solid #555; }
+        .btn-danger { background: var(--danger-color); color: var(--pure-black); }
+
+        .success-section {
+            background: var(--card-bg); border: 1px solid var(--success-color);
+            padding: 60px 40px; border-radius: 20px; text-align: center; display: none; flex-direction: column; align-items: center;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="logo">BiletBul</a>
+    </header>
+
+    <div class="container">
+        <!-- İADE FORMU -->
+        <div class="refund-card" id="refundCard">
+            <h2 style="text-align: center;">Bilet İptal / İade</h2>
+            <p style="text-align: center; color: var(--text-muted); font-size: 14px;">Aşağıdaki biletiniz için iade işlemi başlatıyorsunuz.</p>
+
+            <div class="ticket-summary" id="ticketSummary">
+                <p style="text-align: center;">Bilet bilgileri yükleniyor...</p>
+            </div>
+
+            <div class="refund-amount-box">
+                <span>İade Edilecek Tutar:</span>
+                <strong id="refundAmount">0,00 ₺</strong>
+            </div>
+
+            <form id="refundForm">
+                <label style="display: flex; gap: 10px; margin-bottom: 25px; font-size: 13px; color: var(--text-muted); cursor: pointer;">
+                    <input type="checkbox" required style="accent-color: var(--danger-color);">
+                    <span>İade koşullarını onaylıyorum. Bu işlem <b>geri alınamaz</b>.</span>
+                </label>
+
+                <div style="display: flex; gap: 15px;">
+                    <a href="sorgula.html" class="btn btn-cancel">Vazgeç</a>
+                    <button type="submit" class="btn btn-danger">Bileti İptal Et</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- BAŞARI EKRANI -->
+        <div class="success-section" id="successSection">
+            <div style="width: 80px; height: 80px; border: 3px solid var(--success-color); color: var(--success-color); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 40px; margin-bottom: 25px;">✔</div>
+            <h2>İade İşlemi Başarılı!</h2>
+            <p id="successMsg" style="margin-bottom: 30px; color: var(--text-muted);"></p>
+            <a href="index.html" class="btn btn-danger" style="background: var(--primary-accent); color: black;">Ana Sayfaya Dön</a>
+        </div>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const biletId = urlParams.get('biletId');
+
+        // 1. Bilet Bilgilerini Getir
+        // HTML dosyanızdaki loadTicketData fonksiyonunu şununla güncelleyin:
+        async function loadTicketData() {
+            if(!biletId) {
+                document.getElementById('ticketSummary').innerHTML = "Bilet ID bulunamadı.";
+                return;
+            }
+            try {
+                const response = await fetch(`http://localhost:3000/api/bilet-detay/${biletId}`);
+                if (!response.ok) throw new Error("Bilet getirilemedi");
+        
+                const bilet = await response.json();
+
+                // Verilerin varlığını kontrol ederek ekrana basıyoruz
+                document.getElementById('ticketSummary').innerHTML = `
+                    <div class="ticket-row"><span>Yolcu:</span><strong>${bilet.ad || ''} ${bilet.soy_ad || ''}</strong></div>
+                    <div class="ticket-row"><span>Güzergah:</span><strong>${bilet.kalkis_sehri} ➔ ${bilet.varis_sehri}</strong></div>
+                    <div class="ticket-row"><span>Tarih:</span><strong>${new Date(bilet.sefer_tarihi).toLocaleDateString('tr-TR')} - ${bilet.kalkis_saati || '--:--'}</strong></div>
+                    <div class="ticket-row"><span>Koltuk No:</span><strong>${bilet.koltuk_no || 'Belirsiz'}</strong></div>
+                `;
+                document.getElementById('refundAmount').innerText = `${bilet.fiyat} ₺`;
+            } catch (err) {
+                console.error("Yükleme hatası:", err);
+                document.getElementById('ticketSummary').innerHTML = `<p style="color:red;">Bilet bilgileri alınamadı. Lütfen ID'yi kontrol edin.</p>`;
+            }
+        }
+
+        // 2. İade İşlemini Gönder
+        document.getElementById('refundForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            try {
+                const response = await fetch(`http://localhost:3000/api/bilet-iade`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ biletId: biletId })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    document.getElementById('refundCard').style.display = 'none';
+                    document.getElementById('successSection').style.display = 'flex';
+                    document.getElementById('successMsg').innerText = `Biletiniz başarıyla iptal edildi. Ücret iadesi bankanıza iletildi.`;
+                } else {
+                    alert("Hata: " + data.message);
+                }
+            } catch (err) {
+                alert("İşlem sırasında bir hata oluştu.");
+            }
+        });
+
+        loadTicketData();
+    </script>
+</body>
+</html>
