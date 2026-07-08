@@ -26,7 +26,7 @@ Sistemin veri katmanı, veri bütünlüğünü sağlamak ve veri tekrarını ön
 * **Dinamik Koltuk Matrisi:** Otobüs modellerine göre dinamik olarak şekillenen, doluluk durumunu ve cinsiyet kurallarına göre rezervasyon kısıtlamalarını anlık yöneten akıllı bir koltuk seçim arayüzü geliştirilmiştir.
 
 ## E/R DİYAGRAMI
-<img width="1400" height="1400" alt="Image" src="https://github.com/user-attachments/assets/0203fcb3-de10-476f-b07b-a0e53285af53" />
+<img width="1400" height="1000" alt="Image" src="https://github.com/user-attachments/assets/0203fcb3-de10-476f-b07b-a0e53285af53" />
 
 ## İLİŞKİSEL ŞEMA
 <img width="1088" height="870" alt="Image" src="https://github.com/user-attachments/assets/b0cf952d-2402-4d6e-95bf-6c76e4fa8801" />
